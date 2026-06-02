@@ -1,6 +1,6 @@
 "use client"
 
-import { Check, Rocket, TrendingUp, Building2, Users, Megaphone, Percent, Repeat, ArrowRight, Phone, BadgeDollarSign, Sparkles, type LucideIcon } from "lucide-react"
+import { Check, Rocket, TrendingUp, Building2, Users, Megaphone, Percent, Repeat, ArrowRight, Phone, BadgeDollarSign, Gift, Sparkles, type LucideIcon } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
 import { analytics } from "@/lib/analytics"
 import { appLink } from "@/lib/links"
@@ -167,6 +167,27 @@ function PlanCard({ plan }: { plan: PricingPlan }) {
       </div>
 
       <div className="h-px w-full mb-5" style={{ backgroundColor: plan.popular ? "rgba(255,255,255,0.15)" : "#E8E8F0" }} />
+
+      {plan.trialBadge && (
+        <div
+          className="flex items-center gap-2 px-3 py-2 rounded-lg mb-4"
+          style={{
+            backgroundColor: plan.popular ? "rgba(34, 197, 94, 0.15)" : "rgba(34, 197, 94, 0.08)",
+            border: `1px solid ${plan.popular ? "rgba(34, 197, 94, 0.30)" : "rgba(34, 197, 94, 0.20)"}`,
+          }}
+        >
+          <Gift size={13} style={{ color: plan.popular ? "#86EFAC" : "#16A34A", flexShrink: 0 }} />
+          <span
+            className="text-[10.5px] sm:text-[11px]"
+            style={{
+              fontWeight: 600,
+              color: plan.popular ? "#86EFAC" : "#16A34A",
+            }}
+          >
+            {plan.trialBadge}
+          </span>
+        </div>
+      )}
 
       <ul className="flex flex-col gap-3 mb-6 flex-1">
         {plan.features.map((feature) => {
