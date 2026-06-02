@@ -1,7 +1,9 @@
 "use client"
 
-import { Zap, Megaphone, Camera, Star, Check, Info, type LucideIcon } from "lucide-react"
+import { Zap, Megaphone, Camera, Star, Check, Info, Gift, ArrowRight, type LucideIcon } from "lucide-react"
 import { useLanguage } from "@/components/language-provider"
+import { analytics } from "@/lib/analytics"
+import { appLink } from "@/lib/links"
 import { SpotlightCard } from "@/components/ui/spotlight-card"
 import ShinyText from "@/components/ui/shiny-text"
 import type { CampaignTypeItem } from "@/lib/i18n"
@@ -63,6 +65,31 @@ export function CampaignTypes() {
           <p className="mt-4 mx-auto max-w-2xl text-gray-500 text-[14px] sm:text-[16px]" style={{ lineHeight: 1.7 }}>
             {t.description}
           </p>
+          {t.freeTrialCta && (
+            <a
+              href={appLink("/companies/new")}
+              onClick={() =>
+                analytics.trackMarketingCtaClicked({
+                  ctaName: "free_trial_campaign_types",
+                  location: "campaign_types",
+                  destination: appLink("/companies/new"),
+                  targetUserType: "brand",
+                })
+              }
+              className="inline-flex items-center gap-2 mt-5 px-5 py-2.5 rounded-full transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5 cursor-pointer"
+              style={{
+                background: "linear-gradient(135deg, #16A34A 0%, #15803D 100%)",
+                color: "#FFFFFF",
+                fontSize: "13px",
+                fontWeight: 600,
+                boxShadow: "0 4px 14px rgba(22, 163, 74, 0.30)",
+              }}
+            >
+              <Gift size={15} />
+              {t.freeTrialCta}
+              <ArrowRight size={14} />
+            </a>
+          )}
         </div>
 
         {/* Cards Grid */}

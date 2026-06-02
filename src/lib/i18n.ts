@@ -41,6 +41,7 @@ export type PricingPlan = {
   iconName: string;
   customPriceLabel?: string;
   popularLabel?: string;
+  trialBadge?: string;
 };
 
 export type CampaignTypeItem = {
@@ -89,6 +90,10 @@ export type HomeDictionary = {
       primary: string;
       secondary: string;
     };
+    freeTrial?: {
+      badge: string;
+      subtext: string;
+    };
   };
   nav: {
     links: { label: string; href: string }[];
@@ -118,6 +123,7 @@ export type HomeDictionary = {
     title: string;
     description: string;
     scrollLabel: string;
+    freeTrialCta?: string;
     items: CampaignTypeItem[];
   };
   campaignFeatures: {
@@ -226,6 +232,10 @@ const english: AppDictionary = {
         primary: "I'm a creator",
         secondary: "I'm a brand",
       },
+      freeTrial: {
+        badge: "Your first campaign is free",
+        subtext: "One-time \u00b7 Available on any plan",
+      },
     },
     nav: {
       links: [
@@ -269,6 +279,7 @@ const english: AppDictionary = {
       title: "Create the ideal campaign\nfor your content",
       description: "Choose the campaign type that best fits your brand's goals and start creating content that connects.",
       scrollLabel: "Scroll down",
+      freeTrialCta: "I want my first campaign for free",
       items: [
         {
           iconName: "zap",
@@ -341,7 +352,7 @@ const english: AppDictionary = {
       title: "Start creating content\nthat connects!",
       description: "Select the plan that best suits your needs and start connecting with the best creators.",
       plans: [
-        { name: "Free", description: "Free, no subscription", price: "$0", period: "", features: [{ iconName: "users", text: "2 creators max" }, { iconName: "megaphone", text: "Flash campaign" }, { iconName: "percent", text: "10% commission per creator" }], cta: "Start free", popular: false, iconName: "check" },
+        { name: "Free", description: "Free, no subscription", price: "$0", period: "", features: [{ iconName: "users", text: "2 creators max" }, { iconName: "megaphone", text: "Flash campaign" }, { iconName: "percent", text: "10% commission per creator" }], cta: "Start free", popular: false, iconName: "check", trialBadge: "Includes 1 Free Campaign" },
         { name: "Starter", description: "For brands just starting", price: "US$16", arsPrice: "$24.990", period: "/month", features: [{ iconName: "users", text: "10 creators max" }, { iconName: "megaphone", text: "2 campaigns + Flash campaign" }, { iconName: "repeat", text: "1 Barter campaign" }, { iconName: "percent", text: "5% commission per creator" }], cta: "Start now", popular: false, iconName: "rocket" },
         { name: "Growth", description: "For growing brands", price: "US$29", arsPrice: "$44.990", period: "/month", features: [{ iconName: "users", text: "30 creators max" }, { iconName: "megaphone", text: "Unlimited campaigns + Flash campaign" }, { iconName: "repeat", text: "4 Barter campaigns" }, { iconName: "percent", text: "3% commission per creator" }], cta: "Start now", popular: true, iconName: "trending", popularLabel: "MOST POPULAR" },
         { name: "Scale / Enterprise", description: "Custom solution for large brands", price: null, period: "", features: [{ iconName: "users", text: "Unlimited creators" }, { iconName: "megaphone", text: "Unlimited campaigns + Flash campaign" }, { iconName: "repeat", text: "Unlimited Barter campaigns" }, { iconName: "percent", text: "Negotiable commission per creator" }], cta: "Contact", popular: false, iconName: "building", customPriceLabel: "Custom price" },
@@ -370,6 +381,10 @@ const spanish: AppDictionary = {
       ctas: {
         primary: "Soy creador",
         secondary: "Soy marca",
+      },
+      freeTrial: {
+        badge: "Tu primera campa\u00f1a es gratis",
+        subtext: "1 uso \u00b7 Disponible en cualquier plan",
       },
     },
     nav: {
@@ -414,6 +429,7 @@ const spanish: AppDictionary = {
       title: "Crea el tipo de campaña ideal\npara tu marca",
       description: "Elegí el tipo de campaña que mejor se adapte a los objetivos de tu marca y empezá a crear contenido que conecta.",
       scrollLabel: "Desliza hacia abajo",
+      freeTrialCta: "Quiero mi primera campaña gratis",
       items: [
         {
           iconName: "zap",
@@ -486,7 +502,7 @@ const spanish: AppDictionary = {
       title: "¡Comenzá a crear contenido\nque conecta!",
       description: "Seleccioná el plan que mejor se adapte a tus necesidades y comenzá a conectar con los mejores creadores.",
       plans: [
-        { name: "Free", description: "Free sin suscripción", price: "$0", period: "", features: [{ iconName: "users", text: "2 creadores máximo" }, { iconName: "megaphone", text: "Campaña Flash" }, { iconName: "percent", text: "Comisión del 10% por creador" }], cta: "Empezar gratis", popular: false, iconName: "check" },
+        { name: "Free", description: "Free sin suscripción", price: "$0", period: "", features: [{ iconName: "users", text: "2 creadores máximo" }, { iconName: "megaphone", text: "Campaña Flash" }, { iconName: "percent", text: "Comisión del 10% por creador" }], cta: "Empezar gratis", popular: false, iconName: "check", trialBadge: "Incluye 1 Campaña Gratis" },
         { name: "Starter", description: "Para marcas que están empezando", price: "US$16", arsPrice: "$24.990", period: "/mes", features: [{ iconName: "users", text: "10 creadores máximo" }, { iconName: "megaphone", text: "2 campañas + Campaña Flash" }, { iconName: "repeat", text: "1 Campaña con Canje" }, { iconName: "percent", text: "Comisión del 5% por creador" }], cta: "Comenzar ahora", popular: false, iconName: "rocket" },
         { name: "Growth", description: "Para marcas en crecimiento", price: "US$29", arsPrice: "$44.990", period: "/mes", features: [{ iconName: "users", text: "30 creadores máximo" }, { iconName: "megaphone", text: "Campañas ilimitadas + Campaña Flash" }, { iconName: "repeat", text: "4 Campañas con Canje" }, { iconName: "percent", text: "Comisión del 3% por creador" }], cta: "Comenzar ahora", popular: true, iconName: "trending", popularLabel: "MÁS POPULAR" },
         { name: "Scale / Enterprise", description: "Solución personalizada para grandes marcas", price: null, period: "", features: [{ iconName: "users", text: "Creadores ilimitados" }, { iconName: "megaphone", text: "Campañas ilimitadas + Campaña Flash" }, { iconName: "repeat", text: "Campañas con Canje ilimitadas" }, { iconName: "percent", text: "Comisión negociable por creador" }], cta: "Contactar", popular: false, iconName: "building", customPriceLabel: "Precio a medida" },
@@ -515,6 +531,10 @@ const portuguese: AppDictionary = {
       ctas: {
         primary: "Sou criador",
         secondary: "Sou marca",
+      },
+      freeTrial: {
+        badge: "Sua primeira campanha \u00e9 gr\u00e1tis",
+        subtext: "1 uso \u00b7 Dispon\u00edvel em qualquer plano",
       },
     },
     nav: {
@@ -559,6 +579,7 @@ const portuguese: AppDictionary = {
       title: "Crie o tipo de campanha ideal\npara seu conteúdo",
       description: "Escolha o tipo de campanha que melhor se adapta aos objetivos da sua marca e comece a criar conteúdo que conecta.",
       scrollLabel: "Deslize para baixo",
+      freeTrialCta: "Quero minha primeira campanha grátis",
       items: [
         {
           iconName: "zap",
@@ -631,7 +652,7 @@ const portuguese: AppDictionary = {
       title: "Comece a criar conteúdo\nque conecta!",
       description: "Selecione o plano que melhor se adapta às suas necessidades e comece a se conectar com os melhores criadores.",
       plans: [
-        { name: "Free", description: "Free sem assinatura", price: "$0", period: "", features: [{ iconName: "users", text: "2 criadores máximo" }, { iconName: "megaphone", text: "Campanha Flash" }, { iconName: "percent", text: "Comissão de 10% por criador" }], cta: "Começar grátis", popular: false, iconName: "check" },
+        { name: "Free", description: "Free sem assinatura", price: "$0", period: "", features: [{ iconName: "users", text: "2 criadores máximo" }, { iconName: "megaphone", text: "Campanha Flash" }, { iconName: "percent", text: "Comissão de 10% por criador" }], cta: "Começar grátis", popular: false, iconName: "check", trialBadge: "Inclui 1 Campanha Grátis" },
         { name: "Starter", description: "Para marcas que estão começando", price: "US$16", arsPrice: "$24.990", period: "/mês", features: [{ iconName: "users", text: "10 criadores máximo" }, { iconName: "megaphone", text: "2 campanhas + Campanha Flash" }, { iconName: "repeat", text: "1 Campanha com Troca" }, { iconName: "percent", text: "Comissão de 5% por criador" }], cta: "Começar agora", popular: false, iconName: "rocket" },
         { name: "Growth", description: "Para marcas em crescimento", price: "US$29", arsPrice: "$44.990", period: "/mês", features: [{ iconName: "users", text: "30 criadores máximo" }, { iconName: "megaphone", text: "Campanhas ilimitadas + Campanha Flash" }, { iconName: "repeat", text: "4 Campanhas com Troca" }, { iconName: "percent", text: "Comissão de 3% por criador" }], cta: "Começar agora", popular: true, iconName: "trending", popularLabel: "MAIS POPULAR" },
         { name: "Scale / Enterprise", description: "Solução personalizada para grandes marcas", price: null, period: "", features: [{ iconName: "users", text: "Criadores ilimitados" }, { iconName: "megaphone", text: "Campanhas ilimitadas + Campanha Flash" }, { iconName: "repeat", text: "Campanhas com Troca ilimitadas" }, { iconName: "percent", text: "Comissão negociável por criador" }], cta: "Contatar", popular: false, iconName: "building", customPriceLabel: "Preço sob medida" },
