@@ -26,7 +26,7 @@ function resolveLandingHref(href: string) {
 
 function LandingHeader() {
   const { dictionary } = useLanguage()
-  const { nav } = dictionary.home
+  const { nav, hero } = dictionary.home
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -72,7 +72,7 @@ function LandingHeader() {
             href="/creator"
             onClick={() =>
               analytics.trackMarketingNavClicked({
-                label: "Soy creador",
+                label: hero.ctas.primary,
                 location: "header",
                 destination: "/creator",
                 linkType: "navigation",
@@ -81,7 +81,7 @@ function LandingHeader() {
             className="group relative text-gray-600 hover:text-[#0019DA] transition-colors pb-1"
             style={{ fontSize: "14px", fontWeight: 500 }}
           >
-            Soy creador
+            {hero.ctas.primary}
             <span
               className="absolute bottom-0 left-1/2 h-[2px] w-0 group-hover:w-full group-hover:left-0 transition-all duration-300 rounded-full"
               style={{ background: "linear-gradient(90deg, #0019DA, #633CFF)" }}

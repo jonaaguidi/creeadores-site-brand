@@ -1,7 +1,15 @@
 "use client"
 
-import { useRef, useEffect } from "react"
+import { useRef, useState, useEffect } from "react"
 import { MapPin, Users, Star } from "lucide-react"
+import { useLanguage } from "@/components/language-provider"
+import { getLocaleLanguage } from "@/lib/i18n"
+
+const categoryLabel: Record<string, { one: string; other: string }> = {
+  es: { one: "Categoría", other: "Categorías" },
+  en: { one: "Category", other: "Categories" },
+  pt: { one: "Categoria", other: "Categorias" },
+}
 
 interface CreatorInfo {
   name: string
@@ -59,16 +67,37 @@ export const mobileEntries = [
 ]
 
 export function MobileVideoCard({ videoSrc, creator }: { videoSrc: string; creator?: CreatorInfo }) {
+  const { locale } = useLanguage()
+  const lang = getLocaleLanguage(locale)
+  const catLabel = categoryLabel[lang] ?? categoryLabel.es
   const videoRef = useRef<HTMLVideoElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { rootMargin: "200px" },
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
 
   useEffect(() => {
     const video = videoRef.current
     if (!video) return
-    video.play().catch(() => {})
-  }, [])
+    if (isVisible) {
+      video.play().catch(() => {})
+    } else {
+      video.pause()
+    }
+  }, [isVisible])
 
   return (
     <div
+      ref={containerRef}
       className="relative overflow-hidden"
       style={{
         width: "clamp(150px, 18vw, 200px)",
@@ -85,7 +114,7 @@ export function MobileVideoCard({ videoSrc, creator }: { videoSrc: string; creat
       >
         <video
           ref={videoRef}
-          src={videoSrc}
+          src={isVisible ? videoSrc : undefined}
           autoPlay
           loop
           muted
@@ -134,7 +163,7 @@ export function MobileVideoCard({ videoSrc, creator }: { videoSrc: string; creat
               </span>
               {creator.categories > 0 && (
                 <span className="rounded-full bg-white/15 px-1 py-px text-[5.5px] text-white/80">
-                  +{creator.categories} {creator.categories === 1 ? "Categoría" : "Categorías"}
+                  +{creator.categories} {creator.categories === 1 ? catLabel.one : catLabel.other}
                 </span>
               )}
             </div>
@@ -146,16 +175,37 @@ export function MobileVideoCard({ videoSrc, creator }: { videoSrc: string; creat
 }
 
 export function PhoneMockup({ videoSrc, creator }: { videoSrc: string; creator?: CreatorInfo }) {
+  const { locale } = useLanguage()
+  const lang = getLocaleLanguage(locale)
+  const catLabel = categoryLabel[lang] ?? categoryLabel.es
   const videoRef = useRef<HTMLVideoElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { rootMargin: "200px" },
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
 
   useEffect(() => {
     const video = videoRef.current
     if (!video) return
-    video.play().catch(() => {})
-  }, [])
+    if (isVisible) {
+      video.play().catch(() => {})
+    } else {
+      video.pause()
+    }
+  }, [isVisible])
 
   return (
     <div
+      ref={containerRef}
       className="relative overflow-hidden"
       style={{
         width: "clamp(130px, 16vw, 180px)",
@@ -182,7 +232,7 @@ export function PhoneMockup({ videoSrc, creator }: { videoSrc: string; creator?:
       >
         <video
           ref={videoRef}
-          src={videoSrc}
+          src={isVisible ? videoSrc : undefined}
           autoPlay
           loop
           muted
@@ -233,7 +283,7 @@ export function PhoneMockup({ videoSrc, creator }: { videoSrc: string; creator?:
               </span>
               {creator.categories > 0 && (
                 <span className="rounded-full bg-white/15 px-1 py-px text-[6px] text-white/80 backdrop-blur-sm">
-                  +{creator.categories} {creator.categories === 1 ? "Categoría" : "Categorías"}
+                  +{creator.categories} {creator.categories === 1 ? catLabel.one : catLabel.other}
                 </span>
               )}
             </div>
