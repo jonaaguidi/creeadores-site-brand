@@ -1,7 +1,8 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
-import { Building2, ChevronDown, Handshake, UserRound } from "lucide-react"
+import { useState, useRef, useEffect, Suspense } from "react"
+import { useSearchParams } from "next/navigation"
+import { ArrowRight, Building2, ChevronDown, Handshake, Rocket, UserRound } from "lucide-react"
 import { Logo } from "@/components/logo"
 import { LanguageMenu } from "@/components/language-menu"
 import { useLanguage } from "@/components/language-provider"
@@ -24,7 +25,7 @@ function resolveLandingHref(href: string) {
   return appLink(href)
 }
 
-function LandingHeader() {
+function LandingHeader({ hideCreator }: { hideCreator: boolean }) {
   const { dictionary } = useLanguage()
   const { nav, hero } = dictionary.home
   const [open, setOpen] = useState(false)
@@ -68,25 +69,27 @@ function LandingHeader() {
         />
 
         <div className="hidden min-[1180px]:flex items-center gap-6">
-          <a
-            href="/creator"
-            onClick={() =>
-              analytics.trackMarketingNavClicked({
-                label: hero.ctas.primary,
-                location: "header",
-                destination: "/creator",
-                linkType: "navigation",
-              })
-            }
-            className="group relative text-gray-600 hover:text-[#0019DA] transition-colors pb-1"
-            style={{ fontSize: "14px", fontWeight: 500 }}
-          >
-            {hero.ctas.primary}
-            <span
-              className="absolute bottom-0 left-1/2 h-[2px] w-0 group-hover:w-full group-hover:left-0 transition-all duration-300 rounded-full"
-              style={{ background: "linear-gradient(90deg, #0019DA, #633CFF)" }}
-            />
-          </a>
+          {!hideCreator && (
+            <a
+              href="/creator"
+              onClick={() =>
+                analytics.trackMarketingNavClicked({
+                  label: hero.ctas.primary,
+                  location: "header",
+                  destination: "/creator",
+                  linkType: "navigation",
+                })
+              }
+              className="group relative text-gray-600 hover:text-[#0019DA] transition-colors pb-1"
+              style={{ fontSize: "14px", fontWeight: 500 }}
+            >
+              {hero.ctas.primary}
+              <span
+                className="absolute bottom-0 left-1/2 h-[2px] w-0 group-hover:w-full group-hover:left-0 transition-all duration-300 rounded-full"
+                style={{ background: "linear-gradient(90deg, #0019DA, #633CFF)" }}
+              />
+            </a>
+          )}
 
           {nav.links.map((link) => (
             <a
@@ -113,94 +116,115 @@ function LandingHeader() {
         </div>
 
         <div className="flex items-center gap-3">
-          <a
-            href={appLink("/users/login")}
-            onClick={() =>
-              analytics.trackMarketingCtaClicked({
-                ctaName: "sign_in",
-                location: "header",
-                destination: appLink("/users/login"),
-                targetUserType: "existing_user",
-              })
-            }
-            className="hidden sm:block text-gray-700 hover:text-[#0019DA] transition-colors"
-            style={{ fontSize: "14px", fontWeight: 500 }}
-          >
-            {nav.signIn}
-          </a>
+          {!hideCreator && (
+            <a
+              href={appLink("/users/login")}
+              onClick={() =>
+                analytics.trackMarketingCtaClicked({
+                  ctaName: "sign_in",
+                  location: "header",
+                  destination: appLink("/users/login"),
+                  targetUserType: "existing_user",
+                })
+              }
+              className="hidden sm:block text-gray-700 hover:text-[#0019DA] transition-colors"
+              style={{ fontSize: "14px", fontWeight: 500 }}
+            >
+              {nav.signIn}
+            </a>
+          )}
 
-          {/* Sign-up dropdown */}
-          <div ref={ref} className="relative">
-            <button
-              onClick={handleSignUpMenuToggle}
+          {/* Sign-up dropdown / direct link */}
+          {hideCreator ? (
+            <a
+              href={appLink("/companies/new")}
+              onClick={() =>
+                analytics.trackMarketingCtaClicked({
+                  ctaName: "brand_signup",
+                  location: "header",
+                  destination: appLink("/companies/new"),
+                  targetUserType: "brand",
+                })
+              }
               className="bg-[#0019DA] text-white px-3.5 py-1.5 sm:px-5 sm:py-2 rounded-full hover:bg-[#0014B0] transition-colors cursor-pointer flex items-center gap-1.5"
               style={{ fontSize: "12px", fontWeight: 600 }}
             >
               <span className="sm:hidden">{nav.startFreeMobile}</span>
               <span className="hidden sm:inline">{nav.startFree}</span>
-              <ChevronDown
-                size={14}
-                className="transition-transform duration-200"
-                style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)" }}
-              />
-            </button>
+            </a>
+          ) : (
+            <div ref={ref} className="relative">
+              <button
+                onClick={handleSignUpMenuToggle}
+                className="bg-[#0019DA] text-white px-3.5 py-1.5 sm:px-5 sm:py-2 rounded-full hover:bg-[#0014B0] transition-colors cursor-pointer flex items-center gap-1.5"
+                style={{ fontSize: "12px", fontWeight: 600 }}
+              >
+                <span className="sm:hidden">{nav.startFreeMobile}</span>
+                <span className="hidden sm:inline">{nav.startFree}</span>
+                <ChevronDown
+                  size={14}
+                  className="transition-transform duration-200"
+                  style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)" }}
+                />
+              </button>
 
-            <div
-              className="absolute right-0 mt-3 w-[280px] rounded-2xl bg-white overflow-hidden"
-              style={{
-                boxShadow: "0 12px 40px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06)",
-                transformOrigin: "top right",
-                transition: "opacity 200ms ease, transform 200ms ease",
-                opacity: open ? 1 : 0,
-                transform: open ? "scale(1) translateY(0)" : "scale(0.95) translateY(-8px)",
-                pointerEvents: open ? "auto" : "none",
-              }}
-            >
-              <a
-                href={appLink("/companies/new")}
-                onClick={() => {
-                  setOpen(false)
-                  analytics.trackMarketingCtaClicked({
-                    ctaName: "brand_signup",
-                    location: "header_dropdown",
-                    destination: appLink("/companies/new"),
-                    targetUserType: "brand",
-                  })
+              <div
+                className="absolute right-0 mt-3 w-[280px] rounded-2xl bg-white overflow-hidden"
+                style={{
+                  boxShadow: "0 12px 40px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06)",
+                  transformOrigin: "top right",
+                  transition: "opacity 200ms ease, transform 200ms ease",
+                  opacity: open ? 1 : 0,
+                  transform: open ? "scale(1) translateY(0)" : "scale(0.95) translateY(-8px)",
+                  pointerEvents: open ? "auto" : "none",
                 }}
-                className="flex items-center gap-4 px-5 py-4 hover:bg-gray-50 transition-colors"
               >
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "rgba(0, 25, 218, 0.08)" }}>
-                  <Building2 size={18} className="text-[#0019DA]" />
-                </div>
-                <div>
-                  <p className="text-gray-900" style={{ fontSize: "14px", fontWeight: 600 }}>{nav.signUpDropdown.brand.label}</p>
-                  <p className="text-gray-500" style={{ fontSize: "12px", fontWeight: 400 }}>{nav.signUpDropdown.brand.description}</p>
-                </div>
-              </a>
-              <div className="h-px bg-gray-100 mx-5" />
-              <a
-                href="/creator"
-                onClick={() => {
-                  setOpen(false)
-                  analytics.trackMarketingCtaClicked({
-                    ctaName: "creator_signup",
-                    location: "header_dropdown",
-                    destination: "/creator",
-                    targetUserType: "creator",
-                  })
-                }}
-                className="flex items-center gap-4 px-5 py-4 hover:bg-gray-50 transition-colors"
-              >
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "rgba(0, 25, 218, 0.08)" }}>
-                  <UserRound size={18} className="text-[#0019DA]" />
-                </div>
-                <div>
-                  <p className="text-gray-900" style={{ fontSize: "14px", fontWeight: 600 }}>{nav.signUpDropdown.creator.label}</p>
-                  <p className="text-gray-500" style={{ fontSize: "12px", fontWeight: 400 }}>{nav.signUpDropdown.creator.description}</p>
-                </div>
-              </a>
+                <a
+                  href={appLink("/companies/new")}
+                  onClick={() => {
+                    setOpen(false)
+                    analytics.trackMarketingCtaClicked({
+                      ctaName: "brand_signup",
+                      location: "header_dropdown",
+                      destination: appLink("/companies/new"),
+                      targetUserType: "brand",
+                    })
+                  }}
+                  className="flex items-center gap-4 px-5 py-4 hover:bg-gray-50 transition-colors"
+                >
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "rgba(0, 25, 218, 0.08)" }}>
+                    <Building2 size={18} className="text-[#0019DA]" />
+                  </div>
+                  <div>
+                    <p className="text-gray-900" style={{ fontSize: "14px", fontWeight: 600 }}>{nav.signUpDropdown.brand.label}</p>
+                    <p className="text-gray-500" style={{ fontSize: "12px", fontWeight: 400 }}>{nav.signUpDropdown.brand.description}</p>
+                  </div>
+                </a>
+                <div className="h-px bg-gray-100 mx-5" />
+                <a
+                  href="/creator"
+                  onClick={() => {
+                    setOpen(false)
+                    analytics.trackMarketingCtaClicked({
+                      ctaName: "creator_signup",
+                      location: "header_dropdown",
+                      destination: "/creator",
+                      targetUserType: "creator",
+                    })
+                  }}
+                  className="flex items-center gap-4 px-5 py-4 hover:bg-gray-50 transition-colors"
+                >
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "rgba(0, 25, 218, 0.08)" }}>
+                    <UserRound size={18} className="text-[#0019DA]" />
+                  </div>
+                  <div>
+                    <p className="text-gray-900" style={{ fontSize: "14px", fontWeight: 600 }}>{nav.signUpDropdown.creator.label}</p>
+                    <p className="text-gray-500" style={{ fontSize: "12px", fontWeight: 400 }}>{nav.signUpDropdown.creator.description}</p>
+                  </div>
+                </a>
+              </div>
             </div>
-          </div>
+          )}
 
           <LanguageMenu variant="light" />
         </div>
@@ -209,14 +233,16 @@ function LandingHeader() {
   )
 }
 
-export default function HomePage() {
+function HomePageInner() {
+  const searchParams = useSearchParams()
+  const hideCreator = searchParams?.get("creator") === "none"
   const { dictionary } = useLanguage()
   const { hero } = dictionary.home
 
   return (
     <div className="min-h-screen bg-white overflow-x-clip" style={{ fontFamily: "'Poppins', sans-serif" }}>
       {/* Navigation */}
-      <LandingHeader />
+      <LandingHeader hideCreator={hideCreator} />
 
       {/* Hero Section */}
       <section className="relative overflow-hidden min-h-[80vh] lg:min-h-0" style={{ paddingTop: "72px" }}>
@@ -267,7 +293,7 @@ export default function HomePage() {
         </div>
 
         {/* Hero text content */}
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-16 relative z-20 flex items-center min-h-0 pt-4 sm:pt-6 lg:pt-0 lg:min-h-[calc(90vh-12px)]">
+        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-16 relative z-20 flex items-center min-h-0 pt-10 sm:pt-6 lg:pt-0 lg:min-h-[calc(90vh-12px)]">
           <div className="w-full lg:w-[42%] pb-8 sm:pb-20 lg:py-0 text-left flex flex-col items-start">
             <div
               className="inline-flex items-center gap-2 sm:gap-3 px-3 py-1 sm:px-5 sm:py-1.5 rounded-full mb-5 backdrop-blur-lg"
@@ -333,38 +359,60 @@ export default function HomePage() {
             </p>
 
             <div className="flex flex-row gap-3">
-              <a
-                href={appLink("/companies/new")}
-                onClick={() =>
-                  analytics.trackMarketingCtaClicked({
-                    ctaName: "hero_brand_signup",
-                    location: "hero",
-                    destination: appLink("/companies/new"),
-                    targetUserType: "brand",
-                  })
-                }
-                className="bg-[#0019DA] text-white px-4 py-2 sm:px-8 sm:py-3 rounded-full hover:bg-[#0014B0] transition-colors cursor-pointer flex items-center justify-center gap-1.5 sm:gap-2"
-                style={{ fontSize: "13px", fontWeight: 600 }}
-              >
-                <Building2 size={14} className="sm:w-4 sm:h-4" />
-                {hero.ctas.secondary}
-              </a>
-              <a
-                href="/creator"
-                onClick={() =>
-                  analytics.trackMarketingCtaClicked({
-                    ctaName: "hero_creator_signup",
-                    location: "hero",
-                    destination: "/creator",
-                    targetUserType: "creator",
-                  })
-                }
-                className="text-[#0019DA] px-4 py-2 sm:px-8 sm:py-3 rounded-full hover:bg-white/80 transition-all cursor-pointer flex items-center justify-center gap-1.5 sm:gap-2 backdrop-blur-lg shadow-[0_2px_20px_rgba(0,0,0,0.08),0_1px_4px_rgba(0,0,0,0.04)] hover:shadow-[0_3px_12px_rgba(0,25,218,0.12),0_1px_4px_rgba(0,0,0,0.06)]"
-                style={{ fontSize: "13px", fontWeight: 600, backgroundColor: "rgba(255, 255, 255, 0.6)", border: "1px solid rgba(0, 25, 218, 0.15)" }}
-              >
-                <UserRound size={14} className="sm:w-4 sm:h-4" />
-                {hero.ctas.primary}
-              </a>
+              {hideCreator ? (
+                <a
+                  href={appLink("/companies/new")}
+                  onClick={() =>
+                    analytics.trackMarketingCtaClicked({
+                      ctaName: "hero_brand_signup",
+                      location: "hero",
+                      destination: appLink("/companies/new"),
+                      targetUserType: "brand",
+                    })
+                  }
+                  className="group text-white px-6 py-3 sm:px-9 sm:py-3.5 rounded-full transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 shadow-[0_2px_12px_rgba(0,25,218,0.25)] hover:shadow-[0_3px_16px_rgba(0,25,218,0.35)]"
+                  style={{ fontSize: "14px", fontWeight: 600, background: "linear-gradient(135deg, #0019DA 0%, #2201B2 50%, #633CFF 100%)" }}
+                >
+                  <Rocket size={16} />
+                  Registrarme Gratis como Marca
+                  <ArrowRight size={15} className="transition-transform duration-200 group-hover:translate-x-0.5" />
+                </a>
+              ) : (
+                <a
+                  href={appLink("/companies/new")}
+                  onClick={() =>
+                    analytics.trackMarketingCtaClicked({
+                      ctaName: "hero_brand_signup",
+                      location: "hero",
+                      destination: appLink("/companies/new"),
+                      targetUserType: "brand",
+                    })
+                  }
+                  className="bg-[#0019DA] text-white px-4 py-2 sm:px-8 sm:py-3 rounded-full hover:bg-[#0014B0] transition-colors cursor-pointer flex items-center justify-center gap-1.5 sm:gap-2"
+                  style={{ fontSize: "13px", fontWeight: 600 }}
+                >
+                  <Building2 size={14} className="sm:w-4 sm:h-4" />
+                  {hero.ctas.secondary}
+                </a>
+              )}
+              {!hideCreator && (
+                <a
+                  href="/creator"
+                  onClick={() =>
+                    analytics.trackMarketingCtaClicked({
+                      ctaName: "hero_creator_signup",
+                      location: "hero",
+                      destination: "/creator",
+                      targetUserType: "creator",
+                    })
+                  }
+                  className="text-[#0019DA] px-4 py-2 sm:px-8 sm:py-3 rounded-full hover:bg-white/80 transition-all cursor-pointer flex items-center justify-center gap-1.5 sm:gap-2 backdrop-blur-lg shadow-[0_2px_20px_rgba(0,0,0,0.08),0_1px_4px_rgba(0,0,0,0.04)] hover:shadow-[0_3px_12px_rgba(0,25,218,0.12),0_1px_4px_rgba(0,0,0,0.06)]"
+                  style={{ fontSize: "13px", fontWeight: 600, backgroundColor: "rgba(255, 255, 255, 0.6)", border: "1px solid rgba(0, 25, 218, 0.15)" }}
+                >
+                  <UserRound size={14} className="sm:w-4 sm:h-4" />
+                  {hero.ctas.primary}
+                </a>
+              )}
             </div>
           </div>
         </div>
@@ -387,5 +435,13 @@ export default function HomePage() {
       {/* Footer */}
       <LandingFooter />
     </div>
+  )
+}
+
+export default function HomePage() {
+  return (
+    <Suspense>
+      <HomePageInner />
+    </Suspense>
   )
 }
